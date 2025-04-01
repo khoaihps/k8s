@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zookeeper
-  namespace: dev
 spec:
   replicas: 1
   selector:
@@ -18,3 +17,13 @@ spec:
           image: wurstmeister/zookeeper:3.4.6
           ports:
             - containerPort: 2181
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+spec:
+  ports:
+    - port: 2181
+  selector:
+    app: zookeeper
