@@ -21,7 +21,7 @@ spec:
             - containerPort: 8080
           env:
             - name: CDK_DATABASE_URL
-              value: "postgresql://postgres:postgres@postgresql:5432/conduktor"
+              value: "postgresql://postgres:Y0c5emRHZHlaWE09@postgresql:5432/conduktor"
 ---
 apiVersion: v1
 kind: Service
