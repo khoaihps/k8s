@@ -20,7 +20,7 @@ spec:
           command: ["airflow", "db", "init"]
           env:
             - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-              value: "postgresql://postgres:Y0c5emRHZHlaWE09@postgresql:5432/airflow"
+              value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/airflow"
       containers:
         - name: airflow
           image: apache/airflow:2.10.5
@@ -28,7 +28,7 @@ spec:
             - containerPort: 8080
           env:
             - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-              value: "postgresql://postgres:Y0c5emRHZHlaWE09@postgresql:5432/airflow"
+              value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/airflow"
 ---
 apiVersion: v1
 kind: Service
