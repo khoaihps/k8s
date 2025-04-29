@@ -17,17 +17,19 @@ spec:
       initContainers:
         - name: init-db
           image: apache/airflow:2.10.5
-          command: ["airflow", "db", "init"]
+          command: ["airflow", "db", "migrate" ]
           env:
-            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
               value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/airflow"
       containers:
         - name: airflow
           image: apache/airflow:2.10.5
+          command: ["airflow"]
+          args: ["webserver"]
           ports:
             - containerPort: 8080
           env:
-            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
               value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/airflow"
 ---
 apiVersion: v1
