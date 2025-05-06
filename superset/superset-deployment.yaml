@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superset
+  labels:
+    app: superset
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: superset
+  template:
+    metadata:
+      labels:
+        app: superset
+    spec:
+      initContainers:
+        - name: superset-init
+          image: apache/superset:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              superset db upgrade && \
+              superset fab create-admin \
+                --username admin \
+                --firstname Superset \
+                --lastname Admin \
+                --email admin@superset.com \
+                --password admin && \
+              superset init
+          env:
+            - name: SUPERSET_SECRET_KEY
+              value: "a_very_secret_key"
+            - name: DATABASE_URL
+              value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/superset"
+      containers:
+        - name: superset
+          image: apache/superset:latest
+          ports:
+            - containerPort: 8088
+          env:
+            - name: SUPERSET_SECRET_KEY
+              value: "a_very_secret_key"
+            - name: DATABASE_URL
+              value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/superset"
+          command: ["/bin/sh", "-c"]
+          args:
+            - superset run -h 0.0.0.0 -p 8088 --with-threads --reload --debugger
