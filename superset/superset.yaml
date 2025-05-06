@@ -34,7 +34,9 @@ spec:
             - name: DATABASE_URL
               value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/superset"
             - name: TALISMAN_ENABLED
-              value: "false"  # Disable TALISMAN
+              value: "false"
+            - name: SUPerset_CONFIG
+              value: "/etc/superset/superset_config.py"
       containers:
         - name: superset
           image: apache/superset:latest
@@ -47,9 +49,15 @@ spec:
               value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/superset"
             - name: TALISMAN_ENABLED
               value: "false"  # Disable TALISMAN
+            - name: SUPerset_CONFIG
+              value: "/etc/superset/superset_config.py"  # Trỏ tới file cấu hình của Superset
           command: ["/bin/sh", "-c"]
           args:
             - superset run -h 0.0.0.0 -p 8088 --with-threads --reload --debugger
+      volumes:
+        - name: superset-config
+          configMap:
+            name: superset-config
 ---
 apiVersion: v1
 kind: Service
@@ -64,3 +72,19 @@ spec:
       port: 8088
       targetPort: 8088
       nodePort: 30000
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: superset-config
+data:
+  superset_config.py: |
+    from superset.config import *
+
+    AUTH_TYPE = AUTH_DB
+    AUTH_USER_REGISTRATION = False 
+    AUTH_USER_REGISTRATION_ROLE = "Public"
+    AUTH_ROLE_PUBLIC = "Public
+
+    LOGIN_MANAGER = False 
+    ```
