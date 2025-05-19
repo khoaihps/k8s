@@ -20,28 +20,37 @@ spec:
           ports:
             - containerPort: 8088
           env:
-            - name: SECRET_KEY
-              value: "FKqs2ItIBkt+d01iou4qrkBDYaPOi15kC5E5ueCzuedPOK5WlnwagyWD"
             - name: SUPERSET_DATABASE_URI
               value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/superset"
-            # Disable authentication and authorization (make Superset open, NOT for production)
             - name: SUPERSET_AUTH_TYPE
-              value: "AUTH_DB"  # Using DB auth but we will disable login below
+              value: "AUTH_DB"
             - name: SUPERSET_AUTH_ROLE_PUBLIC
-              value: "Admin"   # Make public role admin to disable auth effectively
+              value: "Admin"
             - name: FLASK_APP
               value: "superset"
             - name: SUPERSET_WEBSERVER_ADDRESS
               value: "0.0.0.0"
+          volumeMounts:
+            - name: superset-config
+              mountPath: /app/pythonpath
           command:
             - "/bin/sh"
             - "-c"
             - |
-              # Disable login and enable anonymous access
-              superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@example.com --password admin || true
-              superset db upgrade
-              superset init
-              exec superset run -p 8088 --with-threads --reload --debugger --host 0.0.0.0
+              superset db upgrade && \
+              superset fab create-admin \
+                --username admin \
+                --firstname Superset \
+                --lastname Admin \
+                --email admin@example.com \
+                --password admin || true && \
+              superset init && \
+              superset run -h 0.0.0.0 -p 8088
+      volumes:
+        - name: superset-config
+          configMap:
+            name: superset-config
+
 ---
 apiVersion: v1
 kind: Service
@@ -50,10 +59,10 @@ metadata:
   labels:
     app: superset
 spec:
-  type: ClusterIP
   selector:
     app: superset
+  type: ClusterIP
   ports:
-    - protocol: TCP
+    - name: http
       port: 80
       targetPort: 8088
