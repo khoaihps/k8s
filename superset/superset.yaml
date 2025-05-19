@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: superset
-          image: apache/superset:latest
+          image: apache/superset:3.0.0
           ports:
             - containerPort: 8088
           env:
