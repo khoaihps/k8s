@@ -34,6 +34,9 @@ spec:
               value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/airflow"
             - name: AIRFLOW__CORE__DAGS_FOLDER
               value: "/opt/airflow/dags/repo/dags"
+            - name: PYTHONPATH
+              value: /opt/airflow/dags/repo
+
           volumeMounts:
             - name: dags
               mountPath: /opt/airflow/dags
