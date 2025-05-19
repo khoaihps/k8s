@@ -31,6 +31,26 @@ spec:
           env:
             - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
               value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/airflow"
+
+        - name: git-sync
+          image: k8s.gcr.io/git-sync/git-sync:v3.6.2
+          env:
+            - name: GIT_SYNC_REPO
+              value: "https://github.com/khoaihps/airflow.git"
+            - name: GIT_SYNC_BRANCH
+              value: "main"
+            - name: GIT_SYNC_ROOT
+              value: "/git"
+            - name: GIT_SYNC_DEST
+              value: "repo"
+            - name: GIT_SYNC_WAIT
+              value: "60"
+            - name: GIT_SYNC_ONE_TIME
+              value: "false"
+          volumeMounts:
+            - name: dags
+              mountPath: /git
+
 ---
 apiVersion: v1
 kind: Service
