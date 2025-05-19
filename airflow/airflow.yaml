@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: init-db
-          image: apache/airflow:2.10.5
+          image: khoaihps1/airflow:latest
           command: ["airflow", "db", "migrate"]
           env:
             - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
@@ -24,7 +24,7 @@ spec:
 
       containers:
         - name: airflow
-          image: apache/airflow:2.10.5
+          image: khoaihps1/airflow:latest
           command: ["airflow"]
           args: ["webserver"]
           ports:
