@@ -20,8 +20,6 @@ spec:
           ports:
             - containerPort: 8088
           env:
-            - name: SUPERSET_DATABASE_URI
-              value: "postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/superset"
             - name: SUPERSET_AUTH_TYPE
               value: "AUTH_DB"
             - name: SUPERSET_AUTH_ROLE_PUBLIC
@@ -32,7 +30,8 @@ spec:
               value: "0.0.0.0"
           volumeMounts:
             - name: superset-config
-              mountPath: /app/pythonpath
+              mountPath: /app/superset_config.py
+              subPath: superset_config.py
           command:
             - "/bin/sh"
             - "-c"

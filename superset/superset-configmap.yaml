@@ -8,6 +8,8 @@ data:
   superset_config.py: |
     SECRET_KEY = 'FKqs2ItIBkt+d01iou4qrkBDYaPOi15kC5E5ueCzuedPOK5WlnwagyWD'
 
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres:Y0c5emRHZHlaWE09@postgresql:5432/superset'
+
     def add_csp_headers(response):
         csp = (
             "script-src 'self' 'unsafe-eval' 'strict-dynamic' "
