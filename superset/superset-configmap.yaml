@@ -7,3 +7,14 @@ metadata:
 data:
   superset_config.py: |
     SECRET_KEY = 'FKqs2ItIBkt+d01iou4qrkBDYaPOi15kC5E5ueCzuedPOK5WlnwagyWD'
+
+    def add_csp_headers(response):
+        csp = (
+            "script-src 'self' 'unsafe-eval' 'strict-dynamic' "
+            "'nonce-CMpVddfE1JYoYzBr_bjjF005YdeOQ-Hb';"
+        )
+        response.headers['Content-Security-Policy'] = csp
+        return response
+
+    def init_app(app):
+        app.after_request(add_csp_headers)
