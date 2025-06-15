@@ -36,6 +36,11 @@ spec:
               value: "/opt/airflow/dags/repo/dags"
             - name: PYTHONPATH
               value: /opt/airflow/dags/repo
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: POSTGRES_PASSWORD
 
           volumeMounts:
             - name: dags
