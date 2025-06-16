@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-ohlc-consumer
+  labels:
+    app: btc-ohlc-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-ohlc-consumer
+  template:
+    metadata:
+      labels:
+        app: btc-ohlc-consumer
+    spec:
+      containers:
+        - name: btc-ohlc-consumer
+          image: khoaihps1/btc_ohlc_consumer:latest
+          imagePullPolicy: Always
+          env:
+            - name: KAFKA_BROKER
+              value: "kafka:9092"
+            - name: KAFKA_TOPIC
+              value: "ohlc"
+            - name: POSTGRES_HOST
+              value: "postgresql"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: "public"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: POSTGRES_PASSWORD
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            exec:
+              command: ["python", "-c", "import sys; sys.exit(0)"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      restartPolicy: Always
