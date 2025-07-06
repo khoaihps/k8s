@@ -44,6 +44,8 @@ spec:
                 secretKeyRef:
                   name: postgresql-secret
                   key: POSTGRES_PASSWORD
+            - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
+              value: "pg_stat_statements"
           ports:
             - containerPort: 5432
           volumeMounts:
